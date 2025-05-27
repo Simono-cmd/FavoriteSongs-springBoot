@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Biblioteka ulubionych piosenek</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th {
+            border: 1px solid;
+            padding: 8px;
+            text-align: center;
+            background-color: #ffc9fa;
+        }
+        td {
+            border: 1px solid;
+            padding: 8px;
+            text-align: left;
+            background-color: #fce8ff;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 6px 12px;
+            margin-right: 5px;
+        }
+        .sort-arrow {
+            font-size: 16px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Biblioteka ulubionych piosenek</h1>
+
+<form th:action="${songForm.id} != null ? @{'/songs/edit/' + ${songForm.id}} : @{'/songs/add'}" method="post" th:object="${songForm}">
+    <input type="text" th:field="*{title}" placeholder="Tytuł" required />
+    <input type="text" th:field="*{artist}" placeholder="Wykonawca" required />
+    <input type="text" th:field="*{album}" placeholder="Album" />
+    <input type="number" th:field="*{releaseYear}" placeholder="Rok" min="1900" max="2100" />
+    <button type="submit" th:text="${songForm.id} != null ? 'Zapisz zmiany' : 'Dodaj piosenkę'">Dodaj piosenkę</button>
+    <a th:if="${songForm.id != null}" href="/songs"><button type="button">Anuluj</button></a>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>
+            <a th:href="@{/songs(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">
+                Tytuł
+                <span class="sort-arrow" th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+            </a>
+        </th>
+        <th>
+            <a th:href="@{/songs(sortBy='artist', direction=${sortBy == 'artist' and direction == 'asc' ? 'desc' : 'asc'})}">
+                Wykonawca
+                <span class="sort-arrow" th:text="${sortBy == 'artist' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+            </a>
+        </th>
+        <th>
+            <a th:href="@{/songs(sortBy='album', direction=${sortBy == 'album' and direction == 'asc' ? 'desc' : 'asc'})}">
+                Album
+                <span class="sort-arrow" th:text="${sortBy == 'album' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+            </a>
+        </th>
+        <th>
+            <a th:href="@{/songs(sortBy='releaseYear', direction=${sortBy == 'releaseYear' and direction == 'asc' ? 'desc' : 'asc'})}">
+                Rok
+                <span class="sort-arrow" th:text="${sortBy == 'releaseYear' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+            </a>
+        </th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="song : ${songs}">
+        <td th:text="${song.title}"></td>
+        <td th:text="${song.artist}"></td>
+        <td th:text="${song.album}"></td>
+        <td th:text="${song.releaseYear}"></td>
+        <td>
+            <a th:href="@{/songs/edit/{id}(id=${song.id})}"><button type="button">Edytuj</button></a>
+            <form th:action="@{/songs/delete/{id}(id=${song.id})}" method="post" style="display:inline" onsubmit="return confirm('Czy na pewno chcesz usunąć tę piosenkę?');">
+                <button type="submit">Usuń</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

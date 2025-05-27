@@ -1,0 +1,44 @@
+### 1. Pobierz wszystkie piosenki
+GET http://localhost:8080/data
+
+###
+GET http://localhost:8080/data?sortBy=releaseYear&direction=asc
+
+
+###
+
+### 2. Dodaj nową piosenkę
+POST http://localhost:8080/data
+Content-Type: application/json
+
+{
+  "title": "Imagine",
+  "artist": "John Lennon",
+  "album": "Imagine",
+  "releaseYear": 1971
+}
+
+
+###
+
+### 3. Zaktualizuj piosenkę o ID 1
+PUT http://localhost:8080/data/1
+Content-Type: application/json
+
+{
+  "title": "Imagine (Remastered)",
+  "artist": "John Lennon",
+  "album": "Imagine",
+  "releaseYear": 2004
+}
+
+###
+
+### 4. Usuń piosenkę o ID 5
+DELETE http://localhost:8080/data/5
+
+###
+
+### 5. Pobierz piosenkę o ID 1 (jeśli istnieje)
+GET http://localhost:8080/data/1
+Accept: application/json
